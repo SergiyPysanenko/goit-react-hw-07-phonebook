@@ -1,21 +1,26 @@
-import { useDispatch } from 'react-redux/es/exports';
-import { filterContacts } from 'redux/filterSlice';
-import { FormStyled } from './Filter.styted';
+import { Div, Label, Input } from './Filter.styted';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectFilter } from 'redux/selectors';
+import { changeFilter } from 'redux/filterSlice';
 
-export const Filter = () => {
+const Filter = () => {
+  const value = useSelector(selectFilter);
   const dispatch = useDispatch();
+
+  const onChange = event => {
+    const normalizedValue = event.target.value.toLowerCase();
+
+    dispatch(changeFilter(normalizedValue));
+  };
+
   return (
-    <FormStyled>
-      <label>
+    <Div>
+      <Label>
         Find contacts by name
-        <input
-          type="text"
-          name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          onChange={e => dispatch(filterContacts(e.target.value))}
-        ></input>
-      </label>
-    </FormStyled>
+        <Input type="text" value={value} onChange={onChange} />
+      </Label>
+    </Div>
   );
 };
+
+export default Filter;

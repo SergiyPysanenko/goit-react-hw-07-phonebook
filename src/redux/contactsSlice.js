@@ -1,35 +1,44 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
-import { persistReducer } from 'redux-persist';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { fetchContacts, addContacts, deleteContacts } from './operations';
 
-import storage from 'redux-persist/lib/storage';
+
+const getActions = type =>
+  isAnyOf(fetchContacts[type], addContacts[type], deleteContacts[type]);
+
+
+const initialState = { items: [], isLoading: false, error: null };
+
 
 const contactsSlice = createSlice({
-  name: 'contats',
-  initialState: {
-    list: [
-      { id: nanoid(), name: '', number: '' },
-    ],
-  },
-  reducers: {
-    addContact(state, action) {
-      console.log(action);
-      state.list = [...state.list, action.payload];
-    },
-    deleteContact(state, action) {
-      state.list = state.list.filter(contact => contact.id !== action.payload);
-    },
-  },
+  name: 'contacts', 
+  initialState, 
+  extraReducers: builder =>
+    builder
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.items = action.payload; 
+      })
+      .addCase(addContacts.fulfilled, (state, action) => {
+        state.items.unshift(action.payload); 
+      })
+      .addCase(deleteContacts.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          contact => contact.id === action.payload.id
+        );
+        state.items.splice(index, 1); 
+      })
+      .addMatcher(getActions('pending'), state => {
+        state.isLoading = true; 
+      })
+      .addMatcher(getActions('rejected'), (state, action) => {
+        state.isLoading = false; 
+        state.error = action.payload; 
+      })
+      .addMatcher(getActions('fulfilled'), state => {
+        state.isLoading = false; 
+        state.error = null;
+      }),
 });
 
 export const { addContact, deleteContact } = contactsSlice.actions;
 
-const persistConfig = {
-  key: 'contacts',
-  storage,
-};
-
-export const contactsReducer = persistReducer(
-  persistConfig,
-  contactsSlice.reducer
-);
+export const contactsReducer = contactsSlice.reducer;
