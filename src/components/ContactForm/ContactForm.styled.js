@@ -5,7 +5,7 @@ export const Form = styled.form`
   flex-direction: column;
   width: 400px;
   padding: 12px;
-  background-color: rgba(199, 195, 195, 0.3);
+  background-color: rgba(199, 195, 195, 0.1);
   border: 3px solid #070808;
   border-radius: 4px;
 `;
@@ -36,8 +36,5 @@ export const Button = styled.button`
   align-items: center;
   justify-content: center;
 
-    &:hover, focus {
-    animation: pulse 1s;
-    box-shadow: 0 0 0 2em transparent;
 }
 `;
