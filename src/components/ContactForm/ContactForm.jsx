@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
-import { Form, Label, Button, Input } from './ContactForm.styled';
+import { Form, Label, Input } from './ContactForm.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectContacts } from 'redux/selectors';
 import { addContacts } from '../../redux/operations';
+import { Button } from '@mui/material';
+
+
 
 const nameInputId = nanoid();
 const numberInputId = nanoid();
@@ -76,7 +79,7 @@ const ContactForm = () => {
         />
       </Label>
 
-      <Button type="submit">
+      <Button type="submit" variant="contained">
         Add contact
       </Button>
     </Form>

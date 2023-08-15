@@ -36,8 +36,8 @@ export const Button = styled.button`
   align-items: center;
   justify-content: center;
 
-  :hover {
-    filter: brightness(0.85);
-  }
-
+    &:hover, focus {
+    animation: pulse 1s;
+    box-shadow: 0 0 0 2em transparent;
+}
 `;
